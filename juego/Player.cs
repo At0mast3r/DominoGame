@@ -6,28 +6,33 @@ public abstract class Player
     {
        this.id=id;
     }
-    public abstract jugada GiveMeRecords(GameInformation gm, Referee rf)
-    {
-       
-    }
+    public abstract jugada GiveMeRecords(InformationForPlayer info, Referee rf);
 }
     //Hay que revisar el metodo de la clase para que no se repita
     public class ManualPlayer:Player
     {
-        public ManualPlayer(string id):base(Player){}
-        public override jugada GiveMeRecords(GameInformation gm, Referee rf)
+        public ManualPlayer(string id):base(id){}
+        public override jugada GiveMeRecords(InformationForPlayer info, Referee rf)
         {
+         int cont = 0;   
         System.Console.WriteLine(" jugador  "+ this.id);
         Console.ForegroundColor=ConsoleColor.Cyan;
-        foreach (var item in gm.OptionsToPlay)
+        foreach (var item in info.Options)
         {
-            System.Console.WriteLine(item.option + " option# "+ cont++);
+            System.Console.WriteLine(item.Item2 + " option# "+ cont++);
         }
         Console.ForegroundColor=ConsoleColor.Gray;
 
         cont=0;
-        System.Console.WriteLine("select a record to play");
+        System.Console.WriteLine("This is your hand");
         foreach (var item in rf.AsignedRecords[this])
+        {
+            System.Console.WriteLine(cont + " " + item.element1 + "-" + item.element2);
+            cont++;
+        }
+        cont=0;
+        System.Console.WriteLine("select a record to play");
+        foreach (var item in info.matchedRec)
         {
             System.Console.WriteLine(cont + " " + item.element1 + "-" + item.element2);
             cont++;
@@ -36,43 +41,31 @@ public abstract class Player
         int answer = int.Parse(Console.ReadLine());
         System.Console.WriteLine( "where do you want to play?"  );
         int selectedOption = int.Parse(Console.ReadLine());
-        int cont = 0;
-        cont=0;
-        foreach (var item in rf.AsignedRecords[this])
-        {
-           if(cont==answer)return new jugada( selectedOption, item);
-           cont++;    
-        }
-        //devolver  por default ya q no debe llegar aqui, ver como arreglar esto
-        return new jugada (0, rf.AsignedRecords[this][0]);
+        return new jugada (selectedOption,info.matchedRec[answer]);
 
         }
     }
     public class RandomPlayer:Player
     {
-        public RandomPlayer(string id):base(Player){}
-        public override jugada GiveMeRecords(GameInformation gm, Referee rf)
+        public RandomPlayer(string id):base(id){}
+        public override jugada GiveMeRecords(InformationForPlayer info, Referee rf)
         {
-            random r1=new random(gm.numberOfOptions);
-            random r2=new random(1);
-            answer=r1.nextRandom();
-            selectedOption=r2.nextRandom();
-            int cont = 0;
-        cont=0;
-        foreach (var item in rf.AsignedRecords[this])
-        {
-           if(cont==answer)return new jugada( selectedOption, item);
-           cont++;    
-        }
-        //devolver  por default ya q no debe llegar aqui, ver como arreglar esto
-        return new jugada (0, rf.AsignedRecords[this][0]);
+            System.Console.WriteLine( this.id  );
+            Random r1=new Random();
+           // Random r2=new Random();
+            int answer=r1.Next(0,info.matchedRec.Count);
+            System.Console.WriteLine( "answer:"+  answer);
+            int selectedOption=r1.Next(0,2);
+            System.Console.WriteLine( "select:"+  selectedOption);
+        
+        return new jugada (selectedOption,info.matchedRec[answer]);
         }
     }
-    public class MyPlayer:Player
+    /*public class MyPlayer:Player
     {
-        public MyPlayer(string id){base(Player);}
-        public override jugada GiveMeRecords(GameInformation gm, Referee rf)
+        public MyPlayer(string id){base(id);}
+        public override jugada GiveMeRecords(GameInformation info, Referee rf) 
         {
-            
+        
         }
-    }
+    }*/

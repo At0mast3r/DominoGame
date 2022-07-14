@@ -4,12 +4,13 @@ namespace juego;
 #region winner
 public class clasicWinner : IWinner
 {
-    public Player Win(Referee referee, GameInformation gm)
+    public string Win(Referee referee, GameInformation gm)
     {
 
         double min = (double)int.MaxValue;
         double aux = 0;
-        Player playerW = new Player("this is for aux");
+        //Player playerW = new Player("this is for aux");
+        string winner="";
         foreach (var item in referee.AsignedRecords.Keys)
         {
             if (referee.AsignedRecords[item].Count != 0)
@@ -21,7 +22,7 @@ public class clasicWinner : IWinner
                 if (aux < min)
                 {
                     min = aux;
-                    playerW = item;
+                    winner= item.id;
                 }
             }
             else
@@ -29,13 +30,13 @@ public class clasicWinner : IWinner
                 Console.BackgroundColor = ConsoleColor.Green;
                 System.Console.WriteLine("the winneeeeer is " + item.id);
                 Console.BackgroundColor = ConsoleColor.Black;
-                return item;
+                return item.id;
             }
         }
         Console.BackgroundColor = ConsoleColor.Green;
-        System.Console.WriteLine("the winneeeeer is " + playerW.id);
+        System.Console.WriteLine("the winneeeeer is " + winner);
         Console.BackgroundColor = ConsoleColor.Black;
-        return playerW;
+        return winner;
     }
 }
 ///<summary>
@@ -45,11 +46,11 @@ public class clasicWinner : IWinner
 public class Winner : IWinner
 {
     
-    public Player Win(Referee referee, GameInformation gm)
+    public string Win(Referee referee, GameInformation gm)
     {
         double max = (double)int.MinValue;
         double aux = 0;
-        Player playerW = new Player("this is for aux");
+        string winner="";
         foreach (var item in referee.AsignedRecords.Keys)
         {
             if (referee.AsignedRecords[item].Count != 0)
@@ -62,7 +63,7 @@ public class Winner : IWinner
                 if (aux > max)
                 {
                     max = aux;
-                    playerW = item;
+                    winner = item.id;
                 }
             }
             else
@@ -70,13 +71,13 @@ public class Winner : IWinner
                 Console.BackgroundColor = ConsoleColor.Green;
                 System.Console.WriteLine("the winneeeeer is " + item.id);
                 Console.BackgroundColor = ConsoleColor.Black;
-                return item;
+                return item.id;
             }
         }
         Console.BackgroundColor = ConsoleColor.Green;
-        System.Console.WriteLine("the winneeeeer is " + playerW.id);
+        System.Console.WriteLine("the winneeeeer is " + winner);
         Console.BackgroundColor = ConsoleColor.Black;
-        return playerW;
+        return winner;
     }
 }
 

@@ -11,7 +11,7 @@ public interface IFinalized
 }
 public interface IWinner
 {
-    public Player Win(Referee referee,GameInformation gm);
+    public string Win(Referee referee,GameInformation gm);
 }
 public interface IValidator
 {    

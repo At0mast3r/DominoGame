@@ -109,33 +109,48 @@ public class Referee
         if (aux2 == referee.AsignedRecords[player].Count) return false;
         else return true;
     }
-    public InformationForPlayer ProvidedInformation(Referee referee, GameInformation gm,Player player,match match,weight weight)
+    public InformationForPlayer ProvidedInformation(Referee referee, GameInformation gm, Player player, match match, weight weight)
     {
         //formando diccionario de turnos pasados
-        Dictionary<Player,List<int>> turnPass=new Dictionary<Player, List<int>>();
-        foreach (var item in gm.turnPass.Keys)
+        Dictionary<Player, List<int>> turnPass = new Dictionary<Player, List<int>>();
+        if (turnPass.Count != 0)
         {
-            turnPass.Add(item,gm.turnPass[item].ToList<int>());
+
+            foreach (var item in gm.turnPass.Keys)
+            {
+                turnPass.Add(item, gm.turnPass[item].ToList<int>());
+            }
         }
         //formando dictonary de jugada de cada player
-        Dictionary<Player,List<jugada>> turnPlayed=new Dictionary<Player, List<jugada>>();
-        foreach (var item in gm.turnPlayed.Keys)
-        {    
-            turnPlayed.Add(item,gm.turnPlayed[item].ToList<jugada>());
+        Dictionary<Player, List<jugada>> turnPlayed = new Dictionary<Player, List<jugada>>();
+        if (turnPlayed.Count != 0)
+        {
+
+            foreach (var item in gm.turnPlayed.Keys)
+            {
+                turnPlayed.Add(item, gm.turnPlayed[item].ToList<jugada>());
+            }
         }
-         // formando lista de fichas que tiene el jugador con sus valores correspondientes
-        List<(Records rcd,int weight)> records=new List<(Records rcd, int weight)>();
+        // formando lista de fichas que tiene el jugador con sus valores correspondientes
+        List<(Records rcd, int weight)> records = new List<(Records rcd, int weight)>();
         //Buscando indices de las fichas que matchean con las opciones para jugar dada la lista anterior
-         List<Records> matchedRec=new List<Records>();
+        List<Records> matchedRec = new List<Records>();
         foreach (var item in referee.AsignedRecords[player])
         {
-            records.Add((item,weight(item)));
-            if(match(gm.OptionsToPlay[0].records,gm.OptionsToPlay[0].option,item,item.element1)||match(gm.OptionsToPlay[0].records,gm.OptionsToPlay[0].option,item,item.element2)||match(gm.OptionsToPlay[1].records,gm.OptionsToPlay[1].option,item,item.element1)||match(gm.OptionsToPlay[1].records,gm.OptionsToPlay[1].option,item,item.element2))
+            records.Add((item, weight(item)));
+            if(gm.OptionsToPlay.Count!=0){
+
+            if (match(gm.OptionsToPlay[0].records, gm.OptionsToPlay[0].option, item, item.element1) || match(gm.OptionsToPlay[0].records, gm.OptionsToPlay[0].option, item, item.element2) || match(gm.OptionsToPlay[1].records, gm.OptionsToPlay[1].option, item, item.element1) || match(gm.OptionsToPlay[1].records, gm.OptionsToPlay[1].option, item, item.element2))
             {
                 matchedRec.Add(item);
             }
+            }
+            else{
+                matchedRec.Add(item);
+            }
         }
-        return new InformationForPlayer(turnPass,turnPlayed,records,matchedRec);
+        List<(Records,int)> OPtions=gm.OptionsToPlay.ToList();
+        return new InformationForPlayer(turnPass, turnPlayed, records, matchedRec, OPtions);
 
     }
 }

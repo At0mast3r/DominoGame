@@ -9,10 +9,10 @@ public class Program
     public static void WaysToPLay1()
     {
         //haciendo instancias de las clases a emplear
-        Player A = new Player("01A");
-        Player B = new Player("02B");
-        Player C = new Player("03C");
-        Player D = new Player("04D");
+        Player A = new RandomPlayer("01A");
+        Player B = new RandomPlayer("02B");
+        Player C = new RandomPlayer("03C");
+        Player D = new ManualPlayer("04D");
         match match=new match(delegate(Records records1,int optionRecord1,Records records2,int optionRecord2){return optionRecord1==optionRecord2;});
         int numberOfOptions = 10;
         GameInformation gi = new GameInformation(numberOfOptions,new weight(delegate (Records records) { return records.element1 + records.element2; }));
@@ -20,6 +20,7 @@ public class Program
         int index = 0;
         referee.shuffler.Shuffle(A, gi, ref index, referee);
         referee.shuffler.Shuffle(B, gi, ref index, referee);
+        referee.shuffler.Shuffle(D, gi, ref index, referee);
         int max=0;
         while (!referee.finalized.EndGame(gi, referee,ref max))
         {
@@ -30,15 +31,15 @@ public class Program
                 //verificar que el jugador no se pase
                 if (referee.HavesARecord(referee,gi, item,match))
                 {
-
-                    jugada jugadaAux = item.GiveMeRecords(gi, referee);
+                    InformationForPlayer info = referee.ProvidedInformation(referee,gi, item, match, gi.weight);
+                    jugada jugadaAux = item.GiveMeRecords(info, referee);
                     while (!referee.validator.ValidPlay(jugadaAux, gi))
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         System.Console.WriteLine("wrong!!!!!");
                         Console.ForegroundColor = ConsoleColor.Gray;
 
-                        jugadaAux = item.GiveMeRecords(gi, referee);
+                        jugadaAux = item.GiveMeRecords(info, referee);
                     }
                     referee.Play(jugadaAux, gi,new match(delegate(Records records1,int optionRecords1,Records records2,int optionRecord2){return optionRecords1==optionRecord2;}));
                     referee.AsignedRecords[item].Remove(jugadaAux.record);
